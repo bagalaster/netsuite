@@ -4,9 +4,17 @@ models:
   - name: inventory_daily
     columns:
       - name: date
+        tests:
+        - not_null
       - name: location
+        tests:
+        - not_null
       - name: bin
+        tests:
+        - not_null
       - name: status
+        tests:
+        - not_null
       - name: quantity
       - name: value
     tests:
