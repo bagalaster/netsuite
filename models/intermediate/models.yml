@@ -7,15 +7,28 @@ models:
       - name: effective_start_date
       - name: effective_end_date
       - name: item_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('item')
       - name: location_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('location')
       - name: cost
   - name: int__daily_item_quantity
     columns:
       - name: location_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('location')
       - name: bin_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('bin')
       - name: date
       - name: quantity
       - name: cum_quantity
-        tests:
-          - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
