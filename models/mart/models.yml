@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: inventory_daily
+    columns:
+      - name: date
+        tests:
+        - not_null
+      - name: location
+        tests:
+        - not_null
+      - name: bin
+        tests:
+        - not_null
+      - name: status
+        tests:
+        - not_null
+      - name: quantity
+      - name: value
+    tests:
+      - dbt_expectations.expect_compound_columns_to_be_unique:
+          column_list: ["date", "location", "bin", "item", "status"]
+          ignore_row_if: "any_value_is_missing"
