@@ -1,0 +1,34 @@
+
+version: 2
+
+models:
+  - name: int__cost_intervals
+    columns:
+      - name: effective_start_date
+      - name: effective_end_date
+      - name: item_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('item')
+      - name: location_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('location')
+      - name: cost
+  - name: int__daily_item_quantity
+    columns:
+      - name: location_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('location')
+      - name: bin_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('bin')
+      - name: date
+      - name: quantity
+      - name: cum_quantity
