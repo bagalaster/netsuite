@@ -11,9 +11,10 @@ daily_changes AS (
         , location_id
         , bin_id
         , item_id
+        , inventory_status_id
         , SUM(quantity) AS quantity
     FROM transaction_line_clean
-    GROUP BY transaction_date_clean, location_id, bin_id, item_id
+    GROUP BY transaction_date_clean, location_id, bin_id, item_id, inventory_status_id
 )
 
 SELECT 
@@ -21,10 +22,11 @@ SELECT
     , location_id
     , bin_id
     , item_id
+    , inventory_status_id
     , quantity
     , SUM(quantity) 
       OVER (
-        PARTITION BY location_id, bin_id, item_id
+        PARTITION BY location_id, bin_id, item_id, inventory_status_id
         ORDER BY date ASC
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS cum_quantity
