@@ -16,7 +16,11 @@ models:
         tests:
         - not_null
       - name: quantity
+        tests:
+          - not_null
       - name: value
+        tests:
+        - not_null
     tests:
       - dbt_expectations.expect_compound_columns_to_be_unique:
           column_list: ["date", "location", "bin", "item", "status"]
