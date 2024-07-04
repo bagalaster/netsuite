@@ -6,19 +6,23 @@ WITH quantity_time_series AS (
         ts_column => 'date',
         bucket_width => INTERVAL 1 DAY,
         partitioning_columns => ['item_id', 'location_id', 'bin_id', 'inventory_status_id'],
-        value_columns => [('cum_quantity', 'locf')]
+        value_columns => [('quantity', 'locf')]
     )
 )
 
 -- Fill in days where there is no change in quantity or price
 SELECT
     q.date
+    , q.item_id
     , i.name AS item
+    , q.location_id
     , l.name AS location
+    , q.bin_id
     , b.name AS bin
-    , s.name AS status
-    , q.cum_quantity AS quantity
-    , q.cum_quantity * ci.cost AS value
+    , q.inventory_status_id
+    , s.name AS inventory_status
+    , q.quantity
+    , q.quantity * ci.cost AS value
 FROM quantity_time_series q
 LEFT JOIN {{ source('netsuite_transactions_raw', 'item') }} i
 ON q.item_id = i.id

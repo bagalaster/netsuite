@@ -19,6 +19,12 @@ models:
       - name: cost
   - name: int__daily_item_quantity
     columns:
+      - name: date
+      - name: item_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('item')
       - name: location_id
         tests:
           - relationships:
@@ -29,6 +35,9 @@ models:
           - relationships:
               field: id
               to: ref('bin')
-      - name: date
+      - name: inventory_status_id
+        tests:
+          - relationships:
+              field: id
+              to: ref('inventory_status')
       - name: quantity
-      - name: cum_quantity
