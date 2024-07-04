@@ -23,11 +23,10 @@ SELECT
     , bin_id
     , item_id
     , inventory_status_id
-    , quantity
     , SUM(quantity) 
       OVER (
         PARTITION BY location_id, bin_id, item_id, inventory_status_id
         ORDER BY date ASC
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-    ) AS cum_quantity
+    ) AS quantity
 FROM daily_changes
