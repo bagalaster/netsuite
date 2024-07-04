@@ -1,0 +1,93 @@
+version: 2
+
+sources:
+  - name: netsuite_transactions_raw
+    description: Tables supplied via csv files
+    schema: netsuite_transactions
+    tables:
+      - name: transaction_line
+        columns:
+          - name: transaction_date
+          - name: transaction_id
+            tests:
+              - not_null
+          - name: transaction_line_id
+            tests:
+              - not_null
+          - name: transaction_type
+          - name: type_based_document_number
+          - name: type_based_document_status 
+          - name: item_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('item')
+          - name: bin_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('bin')
+          - name: inventory_status_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('inventory_status')
+          - name: location_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('location')
+          - name: quantity
+      - name: costs
+        columns:
+          - name: date
+            tests:
+              - not_null
+          - name: location_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('location')
+          - name: item_id
+            tests:
+              - relationships:
+                  field: id
+                  to: ref('item')
+          - name: cost
+      - name: location
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: name
+            tests:
+              - not_null
+      - name: bin
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: name
+            tests:
+              - not_null
+      - name: item
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: name
+            tests:
+              - not_null
+      - name: inventory_status
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: name
+            tests:
+              - not_null
+        
