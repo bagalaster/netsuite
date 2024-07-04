@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: int__cost_intervals
+    columns:
+      - name: effective_start_date
+      - name: effective_end_date
+      - name: item_id
+      - name: location_id
+      - name: cost
+  - name: int__daily_item_quantity
+    columns:
+      - name: location_id
+      - name: bin_id
+      - name: date
+      - name: quantity
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
