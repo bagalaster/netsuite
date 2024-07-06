@@ -1,6 +1,6 @@
 # NetSuite Transaction Data Modeling
 
-This repository contains the code for a DBT project modeling daily inventory quantities from the provided transactional data. 
+This repository contains the code for a dbt project modeling daily inventory quantities from the provided transactional data. 
 All tables are hosted/built in BigQuery.
 
 ## Details/Answers/Commentary
