@@ -31,13 +31,18 @@ the original transaction lines. I can think of a couple explanations
   - The operator or systems recording these transactions sometimes make mistakes that are later rectified
 
 I strongly suspect the second case is true, given that the several cases I spot checked seemed to correct themselves later.
-Regardless, this requires more investigation upstream of the provided transactions.
+See example below -- inventory goes negative at '2022-09-25' but becomes positive at a later date.
 ```sql
 SELECT transaction_date, transaction_id, transaction_line_id, quantity 
-FROM `netsuite_transactions.transaction_line`
+FROM `netsuite_transactions.raw__transaction_line`
 WHERE item_id = 780 AND location_id = 207 AND bin_id = 428 AND inventory_status_id = 1
 ORDER BY transaction_date
 ```
+<img width="662" alt="Screenshot 2024-07-06 at 10 22 49" src="https://github.com/bagalaster/netsuite/assets/35353673/76777400-54d0-4725-b44c-b26f583a83fc">
+
+In any case, this requires more investigation upstream of these raw data.
+
+
 - There are 3703 items present in the `item` table and 28 locations present in the `locations` table for which we have no cost data.
 Additionally, there are 20 location/item pairs for which there is no cost data in `costs`. We have a `value` of `NULL` for all such pairs
 in `inventory_daily`. All location/item pairs for which ther is cost data in `costs` have complete cost data (i.e. the dates cover the entire period
