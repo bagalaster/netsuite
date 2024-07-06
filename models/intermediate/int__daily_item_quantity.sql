@@ -2,7 +2,7 @@
 
 WITH transaction_line_clean AS (
     SELECT EXTRACT(DATE FROM transaction_date) AS transaction_date_clean, *
-    FROM {{ source("netsuite_transactions_raw", "transaction_line") }}
+    FROM {{ source("netsuite_transactions", "raw__transaction_line") }}
 ),
 
 daily_changes AS (

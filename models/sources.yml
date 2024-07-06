@@ -1,11 +1,11 @@
 version: 2
 
 sources:
-  - name: netsuite_transactions_raw
+  - name: netsuite_transactions
     description: Tables supplied via csv files
     schema: netsuite_transactions
     tables:
-      - name: transaction_line
+      - name: raw__transaction_line
         columns:
           - name: transaction_date
           - name: transaction_id
@@ -38,7 +38,7 @@ sources:
                   field: id
                   to: ref('location')
           - name: quantity
-      - name: costs
+      - name: raw__costs
         columns:
           - name: date
             tests:
@@ -54,7 +54,7 @@ sources:
                   field: id
                   to: ref('item')
           - name: cost
-      - name: location
+      - name: raw__location
         columns:
           - name: id
             tests:
@@ -63,7 +63,7 @@ sources:
           - name: name
             tests:
               - not_null
-      - name: bin
+      - name: raw__bin
         columns:
           - name: id
             tests:
@@ -72,7 +72,7 @@ sources:
           - name: name
             tests:
               - not_null
-      - name: item
+      - name: raw__item
         columns:
           - name: id
             tests:
@@ -81,7 +81,7 @@ sources:
           - name: name
             tests:
               - not_null
-      - name: inventory_status
+      - name: raw__inventory_status
         columns:
           - name: id
             tests:
