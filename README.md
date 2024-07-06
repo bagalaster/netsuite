@@ -29,10 +29,14 @@ A couple of notes about data quality
 the original transaction lines. I can think of a couple explanations
   - We are missing some transactions representing the missing quantity
   - The operator or systems recording these transactions sometimes make mistakes that are later rectified
+
 I strongly suspect the second case is true, given that the several cases I spot checked seemed to correct themselves later.
 Regardless, this requires more investigation upstream of the provided transactions.
 ```sql
--- TODO: Insert example
+SELECT transaction_date, transaction_id, transaction_line_id, quantity 
+FROM `netsuite_transactions.transaction_line`
+WHERE item_id = 780 AND location_id = 207 AND bin_id = 428 AND inventory_status_id = 1
+ORDER BY transaction_date
 ```
 - There are 3703 items present in the `item` table and 28 locations present in the `locations` table for which we have no cost data.
 Additionally, there are 20 location/item pairs for which there is no cost data in `costs`. We have a `value` of `NULL` for all such pairs
@@ -87,8 +91,10 @@ date 2022-11-21?
 b. What is the total value of item 209372 on Date 2022-06-05?
   - $65,051.74
   ```sql
-  SELECT date, item_id, SUM(value) AS total_value
-  FROM 
+SELECT date, item_id, ROUND(SUM(value), 2) AS total_value
+FROM `netsuite_transactions.inventory_daily`
+WHERE item_id = 209372 AND date = '2022-06-05'
+GROUP BY date, item_id
   ```
 c. What is the total value of inventory in Location
 c7a95e433e878be525d03a08d6ab666b on 2022-01-01?
@@ -101,3 +107,32 @@ c7a95e433e878be525d03a08d6ab666b on 2022-01-01?
   ```
 
 ### Other Analysis
+
+- Here is a graph of total value of inventory over time. It looks like there is a big drop from 2021-06-29 to 2021-06-30
+
+<img width="808" alt="Screenshot 2024-07-06 at 10 00 02" src="https://github.com/bagalaster/netsuite/assets/35353673/094ce983-b558-47e9-88d9-9f0a6352f2c3">
+
+- Here is a breakdown of that value by location. Most of the inventory value appears to be housed at a single location. Also, it looks like most of the drop in inventory value at 2021-06-30
+comes from a single location (starting with `ec5b809`).
+
+```sql
+SELECT date, location_id, location, SUM(COALESCE(value, 0)) AS total_value
+FROM `netsuite_transactions.inventory_daily`
+GROUP BY date, location_id, location
+```
+
+<img width="797" alt="Screenshot 2024-07-06 at 09 58 38" src="https://github.com/bagalaster/netsuite/assets/35353673/8191ff75-bb5a-457c-90db-506ff2ec833b">
+
+- At that location, it looks like most of the value lost comes from just two items (starting with `10e990` and `5a1b51`).
+
+```sql
+SELECT date, location, item_id, item, SUM(COALESCE(value, 0)) AS total_value
+FROM `netsuite_transactions.inventory_daily`
+WHERE location LIKE 'ec5b809%' AND date BETWEEN '2021-06-28' AND '2021-07-01'
+GROUP BY date, location, item_id, item
+```
+
+<img width="797" alt="Screenshot 2024-07-06 at 10 10 53" src="https://github.com/bagalaster/netsuite/assets/35353673/a6534cfc-25c4-43b1-967f-5623f1c32d82">
+
+
+
