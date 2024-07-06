@@ -9,4 +9,4 @@ SELECT
     , location_id
     , item_id
     , cost
-FROM {{ source('netsuite_transactions_raw', 'costs') }}
+FROM {{ source("netsuite_transactions", "raw__costs") }}

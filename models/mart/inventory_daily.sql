@@ -2,7 +2,7 @@
 
 WITH quantity_time_series AS (
     SELECT * FROM GAP_FILL(
-        (SELECT * FROM {{ ref('int__daily_item_quantity') }}),
+        (SELECT * FROM {{ ref("int__daily_item_quantity") }}),
         ts_column => 'date',
         bucket_width => INTERVAL 1 DAY,
         partitioning_columns => ['item_id', 'location_id', 'bin_id', 'inventory_status_id'],
@@ -24,15 +24,15 @@ SELECT
     , q.quantity
     , q.quantity * ci.cost AS value
 FROM quantity_time_series q
-LEFT JOIN {{ source('netsuite_transactions_raw', 'item') }} i
+LEFT JOIN {{ source("netsuite_transactions", "raw__item") }} i
 ON q.item_id = i.id
-LEFT JOIN {{ source('netsuite_transactions_raw', 'location') }} l
+LEFT JOIN {{ source("netsuite_transactions", "raw__location") }} l
 ON q.location_id = l.id
-LEFT JOIN {{ source('netsuite_transactions_raw', 'bin') }} b
+LEFT JOIN {{ source("netsuite_transactions", "raw__bin") }} b
 ON q.bin_id = b.id
-LEFT JOIN {{ source('netsuite_transactions_raw', 'inventory_status') }} s
+LEFT JOIN {{ source("netsuite_transactions", "raw__inventory_status") }} s
 ON q.inventory_status_id = s.id
-LEFT JOIN {{ ref('int__cost_intervals') }} ci
+LEFT JOIN {{ ref("int__cost_intervals") }} ci
 ON
     q.location_id = ci.location_id
     AND q.item_id = ci.item_id
